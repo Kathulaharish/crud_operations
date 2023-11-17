@@ -4,6 +4,8 @@ const mongoose = require("mongoose")
 
 const app = express()
 app.use(cors())
+//here we are accepting data in JSON format
+app.use(express.json())
 
 const PORT = process.env.PORT || 8080
 
@@ -17,8 +19,38 @@ const schemaData = mongoose.Schema({
 
 const userModel = mongoose.model("user", schemaData)
 
-app.get('/', (req, res)=>{
-    res.json({message: "Server is Running"})
+
+//read data api
+app.get('/', async (req, res)=>{
+    const data = await userModel.find({})
+    res.json({success: true, data: data})
+})
+
+//create data || save data in mongodb
+app.post("/create", async(req, res)=>{
+    console.log(req.body)
+    const data = new userModel(req.body)
+    await data.save()
+    res.send({success:true, message: "Data saved successfully"})
+})
+
+//update data api
+app.put("/update", async(req, res)=>{
+    console.log(req.body)
+    const {id, ...rest } = req.body
+
+    console.log(rest)
+
+    const data = await userModel.updateOne({_id: id}, rest)
+    res.send({success: true, message: "Data updated successfully", data: data})
+})
+
+//delete data api
+app.delete('/delete/:id', async(req, res)=>{
+    const id = req.params.id
+    console.log(id)
+    const data = await userModel.deleteOne({_id: id})
+    res.send({success: true, message: "data deleted successfully"})
 })
 
 //database
