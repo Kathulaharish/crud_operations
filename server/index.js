@@ -1,8 +1,14 @@
 const express = require("express")
 const cors = require("cors")
 const mongoose = require("mongoose")
+const bodyParser = require("body-parser");
+
 
 const app = express()
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
 app.use(cors())
 //here we are accepting data in JSON format
 app.use(express.json())
@@ -14,7 +20,7 @@ const PORT = process.env.PORT || 8080
 const schemaData = mongoose.Schema({
     name: String,
     email: String,
-    mobile: Number,
+    mobile: String,
 }, {timestamps: true})
 
 const userModel = mongoose.model("user", schemaData)
