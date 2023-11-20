@@ -21,12 +21,22 @@ const userModel = mongoose.model("user", schemaData)
 
 
 //read data api
+// http://localhost:8080/
 app.get('/', async (req, res)=>{
     const data = await userModel.find({})
     res.json({success: true, data: data})
 })
 
 //create data || save data in mongodb
+// http://localhost:8080/create
+/*
+    {
+        name,
+        email,
+        mobile,
+    }
+
+*/
 app.post("/create", async(req, res)=>{
     console.log(req.body)
     const data = new userModel(req.body)
@@ -35,6 +45,16 @@ app.post("/create", async(req, res)=>{
 })
 
 //update data api
+// http://localhost:8080/update
+/*
+    {
+        id: "",
+        name : "",
+        email: "",
+        mobile: ""
+    }
+
+*/
 app.put("/update", async(req, res)=>{
     console.log(req.body)
     const {id, ...rest } = req.body
@@ -46,6 +66,7 @@ app.put("/update", async(req, res)=>{
 })
 
 //delete data api
+// http://localhost:8080/delete/id
 app.delete('/delete/:id', async(req, res)=>{
     const id = req.params.id
     console.log(id)
