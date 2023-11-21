@@ -3,6 +3,7 @@ import './App.css';
 import { MdOutlineClose } from "react-icons/md";
 import { useEffect, useState } from 'react';
 import axios from "axios"
+import Formtable from './components/Formtable';
 
 // axios.default.baseURL = "http://localhost:8080/"
 
@@ -36,6 +37,7 @@ function App() {
       if(data.data.success){//in data->data->success see browser console
         setAddSection(false)
         alert(data.data.message)//in data section data message see browser console
+        getFetchData()
       }
     }catch(error){
       console.log("Error while submitting the form", error)
@@ -54,7 +56,19 @@ function App() {
     getFetchData()
   }, [])
 
-  console.log(dataList)
+  // console.log(dataList)
+
+  const handleDelete = async(id)=>{
+    const data = await axios.delete("http://localhost:8080/delete/"+id)
+    if(data.data.success){
+      getFetchData()
+      alert(data.data.message)
+    }
+  }
+
+  const handleUpdate = async (id)=>{
+
+  }
   return (
     <>
       <div className="container">
@@ -62,22 +76,11 @@ function App() {
 
         {
           addSection && (
-            <div className='addContainer'>
-          
-            <form onSubmit={handleSubmit}>
-              <div className="close-btn" onClick={()=>setAddSection(false)}><MdOutlineClose/></div>
-              <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" onChange={handleOnChange}/>
-  
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" onChange={handleOnChange}/>
-  
-              <label htmlFor="mobile">Mobile</label>
-              <input type="number" id="mobile" name="mobile" onChange={handleOnChange}/>
-  
-              <button className="btn">Submit</button>
-            </form>
-          </div>
+            <Formtable
+              handleSubmit={handleSubmit}
+              handleOnChange={handleOnChange}
+              handleClose={()=>setAddSection(false)}
+            />
           )
 
         }
@@ -93,7 +96,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {
+              { dataList[0] ? (
                 dataList.map((e1)=>{
                   return(
                     <tr>
@@ -102,11 +105,14 @@ function App() {
                       <td>{e1.mobile}</td>
                       <td>
                         <button className='btn btn-edit'>Edit</button>
-                        <button className='btn btn-delete'>Delete</button>
+                        <button className='btn btn-delete' onClick={()=>handleDelete(e1._id)}>Delete</button>
                       </td>
                     </tr>
                   )
-                })
+                }) )
+                : (
+                  <p style={{textAlign: "center"}}>No Data</p>
+                )
               }
             </tbody>
           </table>
