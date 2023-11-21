@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { MdOutlineClose } from "react-icons/md";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from "axios"
 
 // axios.default.baseURL = "http://localhost:8080/"
@@ -15,6 +15,8 @@ function App() {
     email: "",
     mobile: "",
   })
+
+  const [dataList, setDataList] = useState([])
 
   const handleOnChange = (e)=>{
     const {value, name} = e.target
@@ -31,10 +33,28 @@ function App() {
     try{
       const data = await axios.post("http://localhost:8080/create", formData)
       console.log(data)
+      if(data.data.success){//in data->data->success see browser console
+        setAddSection(false)
+        alert(data.data.message)//in data section data message see browser console
+      }
     }catch(error){
       console.log("Error while submitting the form", error)
     }
   }
+
+  const getFetchData = async()=>{
+    const data = await axios.get("http://localhost:8080/")
+    console.log(data)
+    if(data.data.success){
+      setDataList(data.data.data)
+    }
+  }
+
+  useEffect (()=>{
+    getFetchData()
+  }, [])
+
+  console.log(dataList)
   return (
     <>
       <div className="container">
@@ -62,6 +82,32 @@ function App() {
 
         }
 
+        <div className='tableContainer'>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                dataList.map((e1)=>{
+                  return(
+                    <tr>
+                      <td>{e1.name}</td>
+                      <td>{e1.email}</td>
+                      <td>{e1.mobile}</td>
+                      
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </table>
+        </div>
 
       </div>
     </>
