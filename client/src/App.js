@@ -10,11 +10,18 @@ import Formtable from './components/Formtable';
 function App() {
 
   const [addSection, setAddSection] = useState(false)
-
+  const [editSection, setEditSection] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    mobile: ""
+  })
+
+  const [formDataEdit, setFormDataEdit] = useState({
+    name: "",
+    email: "",
     mobile: "",
+    _id: ""
   })
 
   const [dataList, setDataList] = useState([])
@@ -38,6 +45,11 @@ function App() {
         setAddSection(false)
         alert(data.data.message)//in data section data message see browser console
         getFetchData()
+        setFormData({
+          name: "",
+          email: "",
+          mobile: ""
+        })
       }
     }catch(error){
       console.log("Error while submitting the form", error)
@@ -66,8 +78,27 @@ function App() {
     }
   }
 
-  const handleUpdate = async (id)=>{
-
+  const handleUpdate = async (e)=>{
+    e.preventDefault()
+    const data = await axios.put("http://localhost:8080/update/", formDataEdit)
+    if(data.data.success){
+      getFetchData();
+      alert(data.data.message)
+      setEditSection(false)
+    }
+  }
+  const handleEditOnChange = async (e)=>{
+    const {value, name} = e.target
+    setFormDataEdit((preve)=>{
+      return{
+        ...preve,
+        [name] : value
+      }
+    })
+  }
+  const handleEdit = (e1)=>{
+    setFormDataEdit(e1)
+    setEditSection(true)
   }
   return (
     <>
@@ -80,9 +111,20 @@ function App() {
               handleSubmit={handleSubmit}
               handleOnChange={handleOnChange}
               handleClose={()=>setAddSection(false)}
+              rest={formData}
             />
           )
 
+        }
+        {
+          editSection && (
+            <Formtable
+              handleSubmit={handleUpdate}
+              handleOnChange={handleEditOnChange}
+              handleClose={()=>setEditSection(false)}
+              rest={formDataEdit}
+            />
+          )
         }
 
         <div className='tableContainer'>
@@ -104,7 +146,7 @@ function App() {
                       <td>{e1.email}</td>
                       <td>{e1.mobile}</td>
                       <td>
-                        <button className='btn btn-edit'>Edit</button>
+                        <button className='btn btn-edit' onClick={()=>handleEdit(e1)}>Edit</button>
                         <button className='btn btn-delete' onClick={()=>handleDelete(e1._id)}>Delete</button>
                       </td>
                     </tr>
