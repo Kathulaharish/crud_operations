@@ -100,7 +100,10 @@ function App() {
                       <td>{e1.name}</td>
                       <td>{e1.email}</td>
                       <td>{e1.mobile}</td>
-                      
+                      <td>
+                        <button className='btn btn-edit'>Edit</button>
+                        <button className='btn btn-delete'>Delete</button>
+                      </td>
                     </tr>
                   )
                 })

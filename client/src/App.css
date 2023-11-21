@@ -8,7 +8,7 @@ body{
 .container{
   padding: 10px;
   /* background-color: red; */
-  max-width: 700px;
+  max-width: fit-content;
   margin: 50px auto;
 }
 
@@ -81,6 +81,9 @@ body{
 
 .tableContainer{
   margin-top: 50px;
+  /* border: 1px solid #c9c5c2; */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 .tableContainer table thead tr{
@@ -93,4 +96,24 @@ body{
   text-align: center;
   min-width: 200px;
   padding: 7px;
+}
+
+.tableContainer table tbody tr td{
+  border-bottom: 1px solid #c9c5c2;
+}
+
+.btn-edit, 
+.btn-delete{
+  font-size: 16px;
+  padding: 5px 10px;
+  margin: 0px 10px;
+}
+
+.btn-edit{
+  background-color: #e2f413;
+}
+
+.btn-delete{
+  background-color: #fa1717;
+  color: white;
 }
